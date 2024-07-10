@@ -1,0 +1,52 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Compass: Skill Assessment & Upskilling Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Career Compass: Skill Assessment & Upskilling Guide</h1>
+    </header>
+    <main>
+        <section class="upload-form">
+            <h2>Upload Your Resume</h2>
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+            <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="resume">Upload your resume (PDF, DOCX, or TXT):</label>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.docx,.txt" required>
+                </div>
+                <div class="form-group">
+                    <label for="position">Select target job position:</label>
+                    <select id="position" name="position" required>
+                        {% for position in job_positions %}
+                        <option value="{{ position }}">{{ position }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Analyze Resume & Get Insights</button>
+            </form>
+        </section>
+        <aside>
+            <h2>About</h2>
+            <p>Career Compass is your personal guide to navigating the job market. Upload your resume, select a target position, and get instant feedback on your eligibility. Receive tailored recommendations for upskilling and advancing your career.</p>
+            <h2>Instructions</h2>
+            <ol>
+                <li>Upload your resume (PDF, DOCX, or TXT)</li>
+                <li>Select your target job position</li>
+                <li>Click 'Analyze Resume & Get Insights'</li>
+                <li>Review your personalized assessment and recommendations</li>
+            </ol>
+        </aside>
+    </main>
+    <footer>
+        <p>© 2024 Career Compass. All rights reserved.</p>
+    </footer>
+</body>
+</html>

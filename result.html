@@ -1,0 +1,90 @@
+<!-- templates/results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Compass: Assessment Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Career Compass: Assessment Results</h1>
+    </header>
+    <main>
+        <section class="results">
+            <h2>Assessment Results</h2>
+            {% if is_eligible %}
+            <p class="success">Congratulations! You meet the requirements for the {{ position }} position.</p>
+            {% else %}
+            <p class="warning">Your resume doesn't fully meet the requirements for the {{ position }} position.</p>
+            {% endif %}
+            <div class="skills-comparison">
+                <div class="user-skills">
+                    <h3>Your Skills</h3>
+                    <ul>
+                        {% for skill in user_skills %}
+                        <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="required-skills">
+                    <h3>Required Skills</h3>
+                    <ul>
+                        {% for skill in job_positions[position] %}
+                        <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="skill-match-plot">
+                <h3>Skill Match Visualization</h3>
+                <img src="data:image/png;base64,{{ plot }}" alt="Skill Match Plot">
+            </div>
+            {% if not is_eligible %}
+            <section class="upskilling">
+                <h2>Upskilling Recommendations</h2>
+                <h3>Skills to Improve</h3>
+                <ul>
+                    {% for skill in missing_skills %}
+                    <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+                <h3>Suggested Courses</h3>
+                <ul>
+                    {% for course in suggested_courses %}
+                    <li>{{ course }}</li>
+                    {% endfor %}
+                </ul>
+                <h3>Recommended Learning Platforms</h3>
+                <ul class="learning-platforms">
+                    {% for site, url in course_sites.items() %}
+                    <li><a href="{{ url }}" target="_blank">{{ site }}</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+            <section class="download-report">
+                <h2>Download Full Report</h2>
+                <form action="{{ url_for('download_report') }}" method="post">
+                    {% for skill in user_skills %}
+                    <input type="hidden" name="user_skills" value="{{ skill }}">
+                    {% endfor %}
+                    <input type="hidden" name="position" value="{{ position }}">
+                    <input type="hidden" name="is_eligible" value="{{ is_eligible }}">
+                    {% for skill in missing_skills %}
+                    <input type="hidden" name="missing_skills" value="{{ skill }}">
+                    {% endfor %}
+                    {% for course in suggested_courses %}
+                    <input type="hidden" name="suggested_courses" value="{{ course }}">
+                    {% endfor %}
+                    <button type="submit">Download PDF Report</button>
+                </form>
+            </section>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Career Compass. All rights reserved.</p>
+    </footer>
+</body>
+</html>
